@@ -9,6 +9,8 @@ from os.path import abspath, dirname
 from nlp_sum.my_sum.parse.plaintext import PlaintextParser
 from nlp_sum.my_sum.method.extract_summarizer.random import RandomSummarizer
 
+from nlp_sum.test.utils_for_test import get_cn_sentence_length, get_en_sentence_length
+
 
 class testRandom(unittest.TestCase):
 
@@ -30,12 +32,12 @@ class testRandom(unittest.TestCase):
         )
 
         summary_cn = summarizer_cn(document_set_cn, 100)
-        summary_cn_length = sum(len(sentence._texts) + 1 for sentence in summary_cn)
+        summary_cn_length = sum(get_cn_sentence_length(sentence) for sentence in summary_cn)
         summary_cn_text = ''.join(sentence._texts + '。' for sentence in summary_cn)
 
         summary_en = summarizer_en(document_set_en, 100)
-        summary_en_length = sum(len(sentence.words) for sentence in summary_en)
-        summary_en_text = ''.join(sentence._texts for sentence in summary_en)
+        summary_en_length = sum(get_en_sentence_length(sentence) for sentence in summary_en)
+        summary_en_text = ' '.join(sentence._texts for sentence in summary_en)
 
         self.assertLessEqual(summary_cn_length, 100)
         self.assertLessEqual(summary_en_length, 100)

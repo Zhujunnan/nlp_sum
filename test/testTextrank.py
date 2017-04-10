@@ -10,6 +10,8 @@ from nlp_sum.my_sum.utils import get_stop_words
 from nlp_sum.my_sum.parse.plaintext import PlaintextParser
 from nlp_sum.my_sum.method.extract_summarizer.textrank import TextRankSummarizer
 
+from nlp_sum.test.utils_for_test import get_cn_sentence_length, get_en_sentence_length
+
 
 class testTextrank(unittest.TestCase):
 
@@ -34,20 +36,20 @@ class testTextrank(unittest.TestCase):
         summarizer_en.stop_words = get_stop_words("english")
 
         summary_cn = summarizer_cn(document_set_cn, 100)
-        summary_cn_len = sum(len(sentence._texts) + 1 for sentence in summary_cn)
+        summary_cn_len = sum(get_cn_sentence_length(sentence) for sentence in summary_cn)
         summary_cn_text = ''.join(sentence._texts + '。' for sentence in summary_cn)
 
         summary_cn_mmr = summarizer_cn(document_set_cn, 100, method="MMR")
-        summary_cn_mmr_len = sum(len(sentence._texts) + 1 for sentence in summary_cn_mmr)
+        summary_cn_mmr_len = sum(get_cn_sentence_length(sentence) for sentence in summary_cn_mmr)
         summary_cn_mmr_text = ''.join(sentence._texts + '。' for sentence in summary_cn_mmr)
 
         summary_en = summarizer_en(document_set_en, 100)
-        summary_en_len = sum(len(sentence.words) for sentence in summary_en)
-        summary_en_text = ''.join(sentence._texts for sentence in summary_en)
+        summary_en_len = sum(get_en_sentence_length(sentence) for sentence in summary_en)
+        summary_en_text = ' '.join(sentence._texts for sentence in summary_en)
 
         summary_en_mmr = summarizer_en(document_set_en, 100, method="MMR")
-        summary_en_mmr_len = sum(len(sentence.words) for sentence in summary_en_mmr)
-        summary_en_mmr_text = ''.join(sentence._texts for sentence in summary_en_mmr)
+        summary_en_mmr_len = sum(get_en_sentence_length(sentence) for sentence in summary_en_mmr)
+        summary_en_mmr_text = ' '.join(sentence._texts for sentence in summary_en_mmr)
 
         self.assertLessEqual(summary_cn_len, 100)
         self.assertLessEqual(summary_cn_mmr_len, 100)

@@ -15,7 +15,9 @@ from nlp_sum.my_sum.similarity.cosine_sim import compute_tf, compute_idf
 class TextRankSummarizer(AbstractSummarizer):
 
     _stop_words = frozenset()
-    epsilon=0.01
+    # when epsilon is smaller than 0.04, the summarization for
+    # chinese will fail, waiting to be solved
+    epsilon=0.1
 
     def __init__(self, language="english", stemmer_or_not=False):
         if language.startswith("en") and stemmer_or_not:

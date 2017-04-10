@@ -13,6 +13,7 @@ from nlp_sum.my_sum.method.extract_summarizer.lsa import LsaSummarizer
 from nlp_sum.my_sum.similarity.cosine_sim import compute_tf, compute_idf
 from nlp_sum.my_sum.similarity.cosine_sim import cosine_similarity
 
+from nlp_sum.test.utils_for_test import get_cn_sentence_length, get_en_sentence_length
 
 
 class testLSA(unittest.TestCase):
@@ -39,21 +40,21 @@ class testLSA(unittest.TestCase):
         summarizer_en.stop_words = get_stop_words("english")
 
         summary_cn = summarizer_cn(document_set_cn, 100)
-        summary_cn_length = sum(len(sentence._texts) + 1 for sentence in summary_cn)
+        summary_cn_length = sum(get_cn_sentence_length(sentence) for sentence in summary_cn)
         summary_cn_text = ''.join(sentence._texts + '。' for sentence in summary_cn)
 
         # summary_cn_mmr = summarizer_cn(document_set_cn, 100, method="MMR")
         summary_cn_mmr = summarizer_cn(document_set_cn, 100, method="MMR", metric="tfidf")
-        summary_cn_mmr_length = sum(len(sentence._texts) + 1 for sentence in summary_cn_mmr)
+        summary_cn_mmr_length = sum(get_cn_sentence_length(sentence) for sentence in summary_cn_mmr)
         summary_cn_text_mmr = ''.join(sentence._texts + '。' for sentence in summary_cn_mmr)
 
-        summary_en_tfidf = summarizer_en(document_set_en, 50, method="MMR", metric="tfidf")
-        summary_en_tfidf_length = sum(len(sentence.words) for sentence in summary_en_tfidf)
-        summary_en_text_tfidf = ''.join(sentence._texts for sentence in summary_en_tfidf)
+        summary_en_tfidf = summarizer_en(document_set_en, 100, method="MMR", metric="tfidf")
+        summary_en_tfidf_length = sum(get_en_sentence_length(sentence) for sentence in summary_en_tfidf)
+        summary_en_text_tfidf = ' '.join(sentence._texts for sentence in summary_en_tfidf)
 
-        summary_en_mmr = summarizer_en(document_set_en, 50, method="MMR")
-        summary_en_mmr_length = sum(len(sentence.words) for sentence in summary_en_mmr)
-        summary_en_text_mmr = ''.join(sentence._texts for sentence in summary_en_mmr)
+        summary_en_mmr = summarizer_en(document_set_en, 100, method="MMR")
+        summary_en_mmr_length = sum(get_en_sentence_length(sentence) for sentence in summary_en_mmr)
+        summary_en_text_mmr = ' '.join(sentence._texts for sentence in summary_en_mmr)
 
         print("-----------------------------chinese default-------------------------------")
         print(summary_cn_text)
@@ -68,8 +69,8 @@ class testLSA(unittest.TestCase):
         print(summary_en_text_mmr)
         print("the summary length is {}".format(summary_en_mmr_length))
 
-        self.assertLessEqual(summary_en_tfidf_length, 50)
-        self.assertLessEqual(summary_en_mmr_length, 50)
+        self.assertLessEqual(summary_en_tfidf_length, 100)
+        self.assertLessEqual(summary_en_mmr_length, 100)
         self.assertLessEqual(summary_cn_length, 100)
         self.assertLessEqual(summary_cn_mmr_length, 100)
 

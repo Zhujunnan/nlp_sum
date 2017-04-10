@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
+import re
 # from os.path import dirnam, join, abspath
 from nlp_sum.my_sum.nlp.Tokenizer import Tokenizer
 from nlp_sum.my_sum.utils import to_unicode
@@ -68,3 +69,26 @@ def build_sentence(sentence_as_string="", language = "english"):
 #             sentences = []
 #     paragraphs.append(Paragraph(sentences))
 #     return Document(paragraphs)
+
+def get_cn_sentence_length(sentence):
+    """
+    get the actual length of chinese sentence
+    :para : Sentence()
+    """
+    # the length of ', NBA' should be two
+    # the length of ',NBA' will be one
+    # the same behavior as microsoft word
+    chinese_word_pattern = re.compile(u"[\u4e00-\u9fa5。；，：“”（）、？《》]+",
+                                      re.UNICODE)
+    english_or_number_pattern = re.compile(u"[^\u4e00-\u9fa5\s。；，：“”（）、？《》]+",
+                                           re.UNICODE)
+    chinese_word_list = re.findall(chinese_word_pattern, sentence._texts)
+    english_or_number_list = re.findall(english_or_number_pattern, sentence._texts)
+    chinese_len = len(''.join(chinese_word_list))
+    english_or_number_len = len(english_or_number_list)
+    # 1 represents the '。'
+    return chinese_len + english_or_number_len + 1
+
+def get_en_sentence_length(sentence):
+    words_list = sentence._texts.split()
+    return len(words_list)

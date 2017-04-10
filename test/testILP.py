@@ -9,6 +9,7 @@ from os.path import abspath, dirname
 from nlp_sum.my_sum.utils import get_stop_words
 from nlp_sum.my_sum.parse.plaintext import PlaintextParser
 from nlp_sum.my_sum.method.extract_summarizer.conceptILP import conceptILPSummarizer
+from nlp_sum.test.utils_for_test import get_cn_sentence_length, get_en_sentence_length
 
 
 class testILP(unittest.TestCase):
@@ -36,40 +37,40 @@ class testILP(unittest.TestCase):
         summarizer_en_stem.stop_words = get_stop_words("english")
 
         summary_cn_ilp = summarizer_cn(document_set_cn, 100, method="ilp")
-        summary_cn_ilp_len = sum(len(sentence._texts) + 1 for sentence in summary_cn_ilp)
+        summary_cn_ilp_len = sum(get_cn_sentence_length(sentence) for sentence in summary_cn_ilp)
         summary_cn_ilp_text = ''.join(sentence._texts + '。' for sentence in summary_cn_ilp)
 
         summary_cn_greedy = summarizer_cn(document_set_cn, 100, method="greedy")
-        summary_cn_greedy_len = sum(len(sentence._texts) + 1 for sentence in summary_cn_greedy)
+        summary_cn_greedy_len = sum(get_cn_sentence_length(sentence) for sentence in summary_cn_greedy)
         summary_cn_greedy_text = ''.join(sentence._texts + '。' for sentence in summary_cn_greedy)
 
         summary_cn_tabu = summarizer_cn(document_set_cn, 100, method="tabu")
-        summary_cn_tabu_len = sum(len(sentence._texts) + 1 for sentence in summary_cn_tabu)
+        summary_cn_tabu_len = sum(get_cn_sentence_length(sentence) for sentence in summary_cn_tabu)
         summary_cn_tabu_text = ''.join(sentence._texts + '。' for sentence in summary_cn_tabu)
 
         summary_en_ilp = summarizer_en(document_set_en, 100, method="ilp")
-        summary_en_ilp_len = sum(len(sentence.words) for sentence in summary_en_ilp)
-        summary_en_ilp_text = ''.join(sentence._texts for sentence in summary_en_ilp)
+        summary_en_ilp_len = sum(get_en_sentence_length(sentence) for sentence in summary_en_ilp)
+        summary_en_ilp_text = ' '.join(sentence._texts for sentence in summary_en_ilp)
 
         summary_en_greedy = summarizer_en(document_set_en, 100, method="greedy")
-        summary_en_greedy_len = sum(len(sentence.words) for sentence in summary_en_greedy)
-        summary_en_greedy_text = ''.join(sentence._texts for sentence in summary_en_greedy)
+        summary_en_greedy_len = sum(get_en_sentence_length(sentence) for sentence in summary_en_greedy)
+        summary_en_greedy_text = ' '.join(sentence._texts for sentence in summary_en_greedy)
 
         summary_en_tabu = summarizer_en(document_set_en, 100, method="tabu")
-        summary_en_tabu_len = sum(len(sentence.words) for sentence in summary_en_tabu)
-        summary_en_tabu_text = ''.join(sentence._texts for sentence in summary_en_tabu)
+        summary_en_tabu_len = sum(get_en_sentence_length(sentence) for sentence in summary_en_tabu)
+        summary_en_tabu_text = ' '.join(sentence._texts for sentence in summary_en_tabu)
 
         summary_en_stem_ilp = summarizer_en_stem(document_set_en, 100, method="ilp")
-        summary_en_stem_ilp_len = sum(len(sentence.words) for sentence in summary_en_stem_ilp)
-        summary_en_stem_ilp_text = ''.join(sentence._texts for sentence in summary_en_stem_ilp)
+        summary_en_stem_ilp_len = sum(get_en_sentence_length(sentence) for sentence in summary_en_stem_ilp)
+        summary_en_stem_ilp_text = ' '.join(sentence._texts for sentence in summary_en_stem_ilp)
 
         summary_en_stem_greedy = summarizer_en_stem(document_set_en, 100, method="greedy")
-        summary_en_stem_greedy_len = sum(len(sentence.words) for sentence in summary_en_stem_greedy)
-        summary_en_stem_greedy_text = ''.join(sentence._texts for sentence in summary_en_stem_greedy)
+        summary_en_stem_greedy_len = sum(get_en_sentence_length(sentence) for sentence in summary_en_stem_greedy)
+        summary_en_stem_greedy_text = ' '.join(sentence._texts for sentence in summary_en_stem_greedy)
 
         summary_en_stem_tabu = summarizer_en_stem(document_set_en, 100, method="tabu")
-        summary_en_stem_tabu_len = sum(len(sentence.words) for sentence in summary_en_stem_tabu)
-        summary_en_stem_tabu_text = ''.join(sentence._texts for sentence in summary_en_stem_tabu)
+        summary_en_stem_tabu_len = sum(get_en_sentence_length(sentence) for sentence in summary_en_stem_tabu)
+        summary_en_stem_tabu_text = ' '.join(sentence._texts for sentence in summary_en_stem_tabu)
 
 
         self.assertLessEqual(summary_cn_ilp_len, 100)

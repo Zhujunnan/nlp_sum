@@ -7,6 +7,7 @@ from collections import namedtuple
 from operator import attrgetter
 import math
 
+import re
 import numpy
 from numpy.linalg import norm
 
@@ -19,6 +20,29 @@ def null_stemmer(string):
 
 SentenceInfo = namedtuple("SentenceInfo", ("sentence", "order", "rating"))
 
+def get_cn_sentence_length(sentence):
+    """
+    get the actual length of chinese sentence
+    :para : Sentence()
+    """
+    # the length of ', NBA' should be two
+    # the length of ',NBA' will be one
+    # the same behavior as microsoft word
+    chinese_word_pattern = re.compile(u"[\u4e00-\u9fa5。；，：“”（）、？《》]+",
+                                      re.UNICODE)
+    english_or_number_pattern = re.compile(u"[^\u4e00-\u9fa5\s。；，：“”（）、？《》]+",
+                                           re.UNICODE)
+    chinese_word_list = re.findall(chinese_word_pattern, sentence._texts)
+    english_or_number_list = re.findall(english_or_number_pattern, sentence._texts)
+    chinese_len = len(''.join(chinese_word_list))
+    english_or_number_len = len(english_or_number_list)
+    # 1 represents the '。'
+    return chinese_len + english_or_number_len + 1
+
+def get_en_sentence_length(sentence):
+    words_list = sentence._texts.split()
+    return len(words_list)
+
 class AbstractSummarizer(object):
 
     def __init__(self, language="english", stemmer=null_stemmer):
@@ -29,11 +53,11 @@ class AbstractSummarizer(object):
         self.language = language.lower()
 
         if self.language.startswith("en"):
-            self._get_sentence_length = lambda sentence : len(sentence.words)
+            self._get_sentence_length = get_en_sentence_length
         if self.language.startswith("ch"):
             # calculate the length of the chinese sentence
             # 1 represents the`。`
-            self._get_sentence_length = lambda sentence : len(unicode(sentence)) + 1
+            self._get_sentence_length = get_cn_sentence_length
 
     def __call__(self, input_document, words_count):
         raise NotImplementedError("The method should be overridden in subclass")

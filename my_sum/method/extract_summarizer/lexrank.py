@@ -67,9 +67,6 @@ class LexRankSummarizer(AbstractSummarizer):
         words = map(self.normalize_word, words)
         return self._filter_out_stop_words(words)
 
-    def _get_content_words_in_sentence(self, sentence):
-        return self._normalize_words(sentence.words)
-
     def _create_dictionary(self, document_set):
         """
         Creates mapping key = word, value = row index

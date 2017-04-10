@@ -1,0 +1,3 @@
+Org-mode is a personal information management and outlining tool for Emacs. This document is intended to give the reader a "feel" for org-mode and to teach basic usage with step-by-step instructions and plentiful screenshots. It is not intended to replace the manual, as only a subset of org-mode's features are covered.
+
+This tutorial has been translated into French, Spanish, Japanese, Chinese, and Korean. Special thanks to the translators.

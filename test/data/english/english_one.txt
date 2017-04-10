@@ -1,0 +1,7 @@
+David O’Toole has written a general tutorial with screenshots. It has been translated into Chinese, French, Hungarian, Japanese and Korean. Worg has many tutorials on specific features. Charles Cave has has written on using date and times. Bernt Hansen describes his use and customizations of Org-mode in 70(!) pages long document, which assumes basic familiarity with Org.
+
+One of the major influences in 2006/2007 on task organization has been the book Getting Things Done (GTD). Using Org-mode for GTD has been described by Charles Cave and a modest example configuration has been given here.
+
+Eric Neilsen has a cookbook of Org configuration snippets. Bernt Hansen wrote about lots of things you can do with Org. SachaChua has a graphical map for learning Org.
+
+Somewhat dated (2007): Both John Wiegley and Sacha Chua have described day planner usage. Another piece by SachaChua is "A day in the life with Org".

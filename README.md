@@ -9,4 +9,5 @@ Make sure you have [python](http://www.python.org/) 2.7+ and
 [jieba](https://github.com/fxsjy/jieba), 
 [nltk](http://www.nltk.org/),
 [pulp](https://pythonhosted.org/PuLP/),
-[GLPK](https://www.gnu.org/software/glpk/)
+[GLPK](https://www.gnu.org/software/glpk/),
+[docopt](http://docopt.org/)

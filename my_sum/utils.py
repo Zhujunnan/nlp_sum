@@ -60,7 +60,12 @@ def get_stop_words(language):
         raise LookupError("Stop-words are not availale for language {0}".format(language))
     return frozenset(to_unicode(word) for word in stop_words_data if word)
 
+def read_stop_words(filename):
+     with open(filename, "rb") as open_file:
+         return parse_stop_words(open_file.read())
 
+def parse_stop_words(data):
+    return frozenset(w.rstrip() for w in to_unicode(data).splitlines() if w)
 
 
 # if __name__ == "__main__":

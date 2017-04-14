@@ -77,30 +77,24 @@ class LexRankSummarizer(AbstractSummarizer):
 
     def _create_tfidf_matrix(self, document_set, dictionary):
         """
+        summarization should treat a sentence as a doc
         Creates matrix of shape |unique words|×|sentences| where cells
         contains number of occurences of words (rows) in senteces (cols).
         """
-        sentence_number_every_doc = [len(doc.sentences) for doc in document_set.documents]
-        words_in_every_doc = [self._normalize_words(doc.words)
-                              for doc in document_set.documents]
-        tf_value_every_doc = compute_tf(words_in_every_doc)
-        idf_value = compute_idf(words_in_every_doc)
+        sentences_count = len(document_set.sentences)
+        words_in_every_sent = [self._normalize_words(sent.words)
+                               for sent in document_set.sentences]
+        tf_value_every_sent = compute_tf(words_in_every_sent)
+        idf_value = compute_idf(words_in_every_sent)
 
-        sentences = document_set.sentences
         words_count = len(dictionary)
-        sentences_count = len(sentences)
-
         # create matrix |unique_words|x|sentences| filled with zeroes
         matrix = numpy.zeros((words_count, sentences_count))
-        sent_idx_start = 0
-        for doc_idx, sent_num in enumerate(sentence_number_every_doc):
-            for idx in xrange(sent_idx_start, sent_num + sent_idx_start):
-                for word in self._normalize_words(sentences[idx].words):
-                    if word in dictionary:
-                        row = dictionary[word]
-                        matrix[row, idx] = tf_value_every_doc[doc_idx][word] * idf_value[word]
-            sent_idx_start += sent_num
-
+        for idx, sentence in enumerate(document_set.sentences):
+            for word in self._normalize_words(sentence.words):
+                if word in dictionary:
+                    row = dictionary[word]
+                    matrix[row, idx] = tf_value_every_sent[idx][word] * idf_value[word]
         return matrix
 
     def _create_sim_matrix(self, document_set, tfidf_matrix, thresold):
@@ -156,3 +150,30 @@ class LexRankSummarizer(AbstractSummarizer):
 
         return p_vector
 
+    # def _create_tfidf_matrix(self, document_set, dictionary):
+    #     """
+    #     Creates matrix of shape |unique words|×|sentences| where cells
+    #     contains number of occurences of words (rows) in senteces (cols).
+    #     """
+    #     sentence_number_every_doc = [len(doc.sentences) for doc in document_set.documents]
+    #     words_in_every_doc = [self._normalize_words(doc.words)
+    #                           for doc in document_set.documents]
+    #     tf_value_every_doc = compute_tf(words_in_every_doc)
+
+
+    #     sentences = document_set.sentences
+    #     words_count = len(dictionary)
+    #     sentences_count = len(sentences)
+
+    #     # create matrix |unique_words|x|sentences| filled with zeroes
+    #     matrix = numpy.zeros((words_count, sentences_count))
+    #     sent_idx_start = 0
+    #     for doc_idx, sent_num in enumerate(sentence_number_every_doc):
+    #         for idx in xrange(sent_idx_start, sent_num + sent_idx_start):
+    #             for word in self._normalize_words(sentences[idx].words):
+    #                 if word in dictionary:
+    #                     row = dictionary[word]
+    #                     matrix[row, idx] = tf_value_every_doc[doc_idx][word] * idf_value[word]
+    #         sent_idx_start += sent_num
+
+    #     return matrix

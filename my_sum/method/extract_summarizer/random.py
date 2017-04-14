@@ -11,7 +11,7 @@ from ._summarizer import AbstractSummarizer
 class RandomSummarizer(AbstractSummarizer):
     """pick sentences randomly"""
 
-    def __init__(self, language="english"):
+    def __init__(self, language="english", stemmer_or_not=False):
         super(RandomSummarizer, self).__init__(language)
 
     def __call__(self, document_set, words_limit):

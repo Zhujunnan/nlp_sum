@@ -4,7 +4,7 @@ from __future__ import absolute_import
 from __future__ import division, print_function, unicode_literals
 
 from ._summarizer import AbstractSummarizer
-from nlp_sum.my_sum.similarity.cosine_sim import compute_tf, compute_idf
+from nlp_sum.my_sum.models import DocumentSet, Document
 
 import random
 import math
@@ -147,6 +147,8 @@ class conceptILPSummarizer(AbstractSummarizer):
                 sentence.concepts.append(self._join_ngram(ngram))
 
     def _compute_document_frequency_for_concept(self, document_set):
+        if isinstance(document_set, Document):
+            document_set = DocumentSet([document_set])
         concept_in_every_doc = [set() for doc in document_set.documents]
         for idx, doc in enumerate(document_set.documents):
             for sentence in doc.sentences:

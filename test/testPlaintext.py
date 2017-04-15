@@ -6,7 +6,6 @@ from __future__ import division, print_function, unicode_literals
 import unittest
 from os.path import abspath, dirname
 
-from nlp_sum.my_sum.nlp.Tokenizer import Tokenizer
 from nlp_sum.my_sum.utils import to_unicode
 from nlp_sum.my_sum.parse.plaintext import PlaintextParser
 
@@ -23,11 +22,11 @@ class testPlaintext(unittest.TestCase):
 
         parser_cn = PlaintextParser("chinese")
         parser_en = PlaintextParser("english")
-        document_cn = PlaintextParser.build_document_from_file(
-            Tokenizer("chinese"), cn_file
+        document_cn = parser_cn.build_document_from_file(
+            cn_file
         )
-        document_en = PlaintextParser.build_document_from_file(
-            Tokenizer("english"), en_file
+        document_en = parser_en.build_document_from_file(
+            en_file
         )
 
         document_set_cn = parser_cn.build_documentSet_from_dir(

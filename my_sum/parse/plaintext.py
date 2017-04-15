@@ -23,16 +23,15 @@ class PlaintextParser(DocumentParser):
         file_list = filter(lambda file: not file.startswith("."), file_list)
         file_path_list = [path + file_name for file_name in file_list]
         Document_list = [
-            self.build_document_from_file(self._tokenizer, file_path)
+            self.build_document_from_file(file_path)
             for file_path in file_path_list
         ]
         return DocumentSet(Document_list)
 
-    @staticmethod
-    def build_document_from_file(tokenizer, file_path):
+    def build_document_from_file(self, file_path):
         # build Document from a single file
         try:
-            with open(file_path, 'r') as file:
+            with open(file_path, 'rb') as file:
                 text = to_unicode(file.read())
         except IOError:
             print("please check if {} is valid".format(file_path))
@@ -42,9 +41,9 @@ class PlaintextParser(DocumentParser):
         for line in text.strip().splitlines():
             line = line.lstrip()
             if line:
-                sentence_tuple = tokenizer.to_sentences(line)
+                sentence_tuple = self.tokenize_sentences(line)
                 for sentence in sentence_tuple:
-                    sentences.append(Sentence(sentence, tokenizer))
+                    sentences.append(Sentence(sentence, self._tokenizer))
                 paragraphs.append(Paragraph(sentences))
                 sentences = []
             else:

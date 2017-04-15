@@ -28,8 +28,8 @@ from __future__ import division, print_function, unicode_literals
 from os.path import isfile, isdir, abspath
 from docopt import docopt
 from nlp_sum.my_sum.utils import to_string, get_stop_words, read_stop_words
-from nlp_sum.my_sum.nlp.Tokenizer import Tokenizer
 from nlp_sum.my_sum.parse.plaintext import PlaintextParser
+from nlp_sum.my_sum.parse.xml_parse import XmlParser
 from nlp_sum.my_sum.method.extract_summarizer.conceptILP import conceptILPSummarizer
 from nlp_sum.my_sum.method.extract_summarizer.kl import KLSummarizer
 from nlp_sum.my_sum.method.extract_summarizer.lexrank import LexRankSummarizer
@@ -40,7 +40,8 @@ from nlp_sum.my_sum.method.extract_summarizer.textrank import TextRankSummarizer
 
 
 PARSERS = {
-    "plaintext" : PlaintextParser
+    "plaintext" : PlaintextParser,
+    "xml" : XmlParser
 }
 
 METHODS = {
@@ -66,7 +67,6 @@ def handle_arguments(args):
     words_limit = int(words_limit)
     language = args['--language'] or "english"
     parser = parser(language)
-    tokenizer = Tokenizer(language)
 
     if args['--file'] is not None:
         file_path = args['--file']
@@ -77,7 +77,7 @@ def handle_arguments(args):
             )
         elif isfile(file_path):
             document_set = parser.build_document_from_file(
-                tokenizer, file_path
+                file_path
             )
         else:
             raise ValueError("Input file is invalid")

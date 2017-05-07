@@ -29,7 +29,7 @@ RUN wget https://repo.continuum.io/archive/Anaconda2-4.3.1-Linux-x86_64.sh -P /t
 RUN /bin/bash /tmp/Anaconda2-4.3.1-Linux-x86_64.sh -b -p $ANACONDA_ROOT
 
 RUN pip install -U nltk
-RUN python -m nltk.downloader -q all
+RUN python -m nltk.downloader -q punkt
 RUN pip install jieba
 RUN pip install pulp
 RUN pip install docopt

@@ -199,6 +199,10 @@ class conceptILPSummarizer(AbstractSummarizer):
             if self._get_sentence_length(sentence) < mininum_sentence_length:
                 continue
 
+            # sometimes the words of sentence may be empty set
+            if not sentence.words:
+                continue
+
             # prune citations
             first_token, last_token = sentence.words[0], sentence.words[-1]
             if remove_citations and \

@@ -4,10 +4,11 @@
 nlp_sum - multi-document summarizer.
 
 Usage:
-    nlp_sum (ilp | kl | lexrank | lsa | random | submodular | textrank) [--length=<length>] [--language=<lang>] [--stopwords=<file_path>] [--stem] [--format=<format>] [--para=<parameter>] [--output=<file_path>] --file=<file_path>
+    nlp_sum (ilp | kl | lexrank | lsa | random | submodular | textrank | manifoldrank) [--query=<query>] [--length=<length>] [--language=<lang>] [--stopwords=<file_path>] [--stem] [--format=<format>] [--para=<parameter>] [--output=<file_path>] --file=<file_path>
     nlp_sum --help
 
 Options:
+    --query=<query>          query to summarize the text
     --length=<length>        Length limit of summarized text.
     --language=<lang>        Natural language of summarized text. [default: english]
     --stopwords=<file_path>  Path to a file containing a list of stopwords. One word per line in UTF-8 encoding.
@@ -27,7 +28,7 @@ from __future__ import division, print_function, unicode_literals
 
 from os.path import isfile, isdir, abspath
 from docopt import docopt
-from nlp_sum.my_sum.utils import to_string, get_stop_words, read_stop_words
+from nlp_sum.my_sum.utils import to_string, to_unicode, get_stop_words, read_stop_words
 from nlp_sum.my_sum.parse.plaintext import PlaintextParser
 from nlp_sum.my_sum.parse.xml_parse import XmlParser
 from nlp_sum.my_sum.method.extract_summarizer.conceptILP import conceptILPSummarizer
@@ -37,6 +38,9 @@ from nlp_sum.my_sum.method.extract_summarizer.lsa import LsaSummarizer
 from nlp_sum.my_sum.method.extract_summarizer.random import RandomSummarizer
 from nlp_sum.my_sum.method.extract_summarizer.submodular import SubmodularSummarizer
 from nlp_sum.my_sum.method.extract_summarizer.textrank import TextRankSummarizer
+
+from nlp_sum.my_sum.method.query_summarizer.lexrank import LexRank_querySummarizer
+from nlp_sum.my_sum.method.query_summarizer.manifoldrank import ManifoldRankSummarizer
 
 
 PARSERS = {
@@ -52,6 +56,11 @@ METHODS = {
     "random" : RandomSummarizer,
     "submodular" : SubmodularSummarizer,
     "textrank" : TextRankSummarizer,
+}
+
+METHODS_Q = {
+    "lexrank" : LexRank_querySummarizer,
+    "manifoldrank" : ManifoldRankSummarizer,
 }
 
 def handle_arguments(args):
@@ -92,10 +101,15 @@ def handle_arguments(args):
     else:
         stem_or_not = False
 
-    summarizer_class = next(cls for name, cls in METHODS.items() if args[name])
+    query = False or to_unicode(args['--query'])
+    if args['--query']:
+        summarizer_class = next(cls for name, cls in METHODS_Q.items() if args[name])
+    else:
+        summarizer_class = next(cls for name, cls in METHODS.items() if args[name])
+
     summarizer = build_summarizer(summarizer_class, language, stop_words, stem_or_not)
 
-    return document_set, summarizer, language, words_limit
+    return document_set, summarizer, language, words_limit, query
 
 
 def build_summarizer(summarizer_class, language, stop_words, stem_or_not):
@@ -105,11 +119,15 @@ def build_summarizer(summarizer_class, language, stop_words, stem_or_not):
 
 def main(args=None):
     args = docopt(to_string(__doc__))
-    document_set, summarizer, language, words_limit = handle_arguments(args)
+    document_set, summarizer, language, words_limit, query = handle_arguments(args)
 
     output_path = args['--output']
 
-    summary = summarizer(document_set, words_limit)
+    if query:
+        summary = summarizer(document_set, query, words_limit)
+    else:
+        summary = summarizer(document_set, words_limit)
+
     if language.startswith("en"):
         summary_text = ' '.join(sentence._texts for sentence in summary)
     elif language.startswith("ch"):

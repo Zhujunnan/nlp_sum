@@ -16,6 +16,7 @@ Make sure you have [python](http://www.python.org/) 2.7+ and
 
 ```sh
 $ python -m nlp_sum submodular --length 200 --language english --stem --output ~/Desktop/out --file ~/Desktop/all
+$ python -m nlp_sum lexrank --query summarization --length 200 --language english --stem --output ~/Desktop/out --file ~/Desktop/all
 $ python -m nlp_sum --help # for more info
 ```
 

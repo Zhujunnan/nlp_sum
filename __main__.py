@@ -4,7 +4,7 @@
 nlp_sum - multi-document summarizer.
 
 Usage:
-    nlp_sum (ilp | kl | lexrank | lsa | random | submodular | textrank | manifoldrank) [--query=<query>] [--length=<length>] [--language=<lang>] [--stopwords=<file_path>] [--stem] [--format=<format>] [--para=<parameter>] [--output=<file_path>] --file=<file_path>
+    nlp_sum (ilp | kl | lexrank | lsa | nmf | random | submodular | textrank | manifoldrank) [--query=<query>] [--length=<length>] [--language=<lang>] [--stopwords=<file_path>] [--stem] [--format=<format>] [--para=<parameter>] [--output=<file_path>] --file=<file_path>
     nlp_sum --help
 
 Options:
@@ -35,6 +35,7 @@ from nlp_sum.my_sum.method.extract_summarizer.conceptILP import conceptILPSummar
 from nlp_sum.my_sum.method.extract_summarizer.kl import KLSummarizer
 from nlp_sum.my_sum.method.extract_summarizer.lexrank import LexRankSummarizer
 from nlp_sum.my_sum.method.extract_summarizer.lsa import LsaSummarizer
+from nlp_sum.my_sum.method.extract_summarizer.nmf import NmfSummarizer
 from nlp_sum.my_sum.method.extract_summarizer.random import RandomSummarizer
 from nlp_sum.my_sum.method.extract_summarizer.submodular import SubmodularSummarizer
 from nlp_sum.my_sum.method.extract_summarizer.textrank import TextRankSummarizer
@@ -53,6 +54,7 @@ METHODS = {
     "kl" : KLSummarizer,
     "lexrank" : LexRankSummarizer,
     "lsa" : LsaSummarizer,
+    "nmf" : NmfSummarizer,
     "random" : RandomSummarizer,
     "submodular" : SubmodularSummarizer,
     "textrank" : TextRankSummarizer,

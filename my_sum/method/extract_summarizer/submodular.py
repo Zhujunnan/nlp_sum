@@ -34,7 +34,8 @@ class SubmodularSummarizer(AbstractSummarizer):
     def stop_words(self, words):
         self._stop_words = frozenset(map(self.normalize_word, words))
 
-    def __call__(self, document_set, words_limit, Lambda=0.5, beta=0.1):
+    def __call__(self, document_set, words_limit, Lambda=0.5, beta=0.1, summary_order="origin"):
+        self.summary_order = summary_order
         assert Lambda < 1, "Lambda must be in interval [0, 1]"
         assert beta < 1, "beta must be in interval [0, 1]"
         return self.greedy(document_set, words_limit, Lambda, beta)
@@ -175,7 +176,8 @@ class SubmodularSummarizer(AbstractSummarizer):
             sent_chosen[max_sent_idx] = True
             summary_idx_set.append(max_sent_idx)
 
-        summary_idx_set = sorted(summary_idx_set)
+        if self.summary_order == "origin":
+            summary_idx_set = sorted(summary_idx_set)
         summary = [sentences[idx] for idx in summary_idx_set]
 
         return summary

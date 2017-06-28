@@ -58,8 +58,9 @@ class LsaSummarizer(AbstractSummarizer):
     #         return self._get_best_sentences_by_MMR(documentSet.sentences, words_limit,
     #                                                matrix, lambda sent: next(ranks))
 
-    def __call__(self, documentSet, words_limit, method="mmr", metric="tf"):
+    def __call__(self, documentSet, words_limit, method="mmr", metric="tf", summary_order="origin"):
         dictionary = self._create_dictionary(documentSet)
+        self.summary_order = summary_order
         # empty document
         if not dictionary:
             return ()

@@ -44,6 +44,12 @@ def get_en_sentence_length(sentence):
     return len(words_list)
 
 class AbstractSummarizer(object):
+    """
+    summary_order:
+    origin: sentence appear as same as the order in the original doc
+    rating: sentence appear in the order of the rating(descending order)
+    """
+    _summary_order = "origin"
 
     def __init__(self, language="english", stemmer=null_stemmer):
         if not callable(stemmer):
@@ -61,6 +67,14 @@ class AbstractSummarizer(object):
 
     def __call__(self, input_document, words_count):
         raise NotImplementedError("The method should be overridden in subclass")
+
+    @property
+    def summary_order(self):
+        return self._summary_order
+
+    @summary_order.setter
+    def summary_order(self, sum_order):
+        self._summary_order = sum_order
 
     def normalize_word(self, word):
         return self._stemmer(to_unicode(word).lower())
@@ -104,7 +118,8 @@ class AbstractSummarizer(object):
                 summary.append(info)
                 summary_word_count += sentence_length
 
-        summary = sorted(summary, key=attrgetter("order"))
+        if self.summary_order == "origin":
+            summary = sorted(summary, key=attrgetter("order"))
 
         return tuple(info.sentence for info in summary)
 
@@ -172,5 +187,6 @@ class AbstractSummarizer(object):
                 break
             sent_chosen[pick_sent_idx] = True
             summary.append(infos[pick_sent_idx])
+        if self.summary_order == "origin":
             summary = sorted(summary, key=attrgetter("order"))
         return tuple(info.sentence for info in summary)

@@ -79,9 +79,11 @@ class conceptILPSummarizer(AbstractSummarizer):
                  prune_sen=True,
                  prune_method="top-n",
                  para=100,
-                 method="ilp"):
+                 method="ilp",
+                 summary_order="origin"):
 
         self.sentences = document_set.sentences
+        self.summary_order = summary_order
         self._extract_ngrams(ngram)
         self._compute_document_frequency_for_concept(document_set)
         self._compute_word_frequency(document_set)
@@ -102,7 +104,8 @@ class conceptILPSummarizer(AbstractSummarizer):
             value, summary_idx_set = self._solve_ilp_problem(words_limit)
 
         # sorted summary_idx_set in ascending order
-        summary_idx_set = sorted(summary_idx_set)
+        if self.summary_order == "origin":
+            summary_idx_set = sorted(summary_idx_set)
         summary = tuple(self.sentences[idx] for idx in summary_idx_set)
         return summary
 

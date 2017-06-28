@@ -38,8 +38,9 @@ class NmfSummarizer(AbstractSummarizer):
     def stop_words(self, words):
         self._stop_words = frozenset(map(self.normalize_word, words))
 
-    def __call__(self, documentSet, words_limit, method="mmr", metric="tf", r=None):
+    def __call__(self, documentSet, words_limit, method="mmr", metric="tf", r=None, summary_order="origin"):
         dictionary = self._create_dictionary(documentSet)
+        self.summary_order = summary_order
         # empty document
         if not dictionary:
             return ()

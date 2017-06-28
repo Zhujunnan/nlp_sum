@@ -45,8 +45,9 @@ class LexRankSummarizer(AbstractSummarizer):
     def stop_words(self, words):
         self._stop_words = frozenset(map(self.normalize_word, words))
 
-    def __call__(self, document_set, words_limit, method="mmr"):
+    def __call__(self, document_set, words_limit, method="mmr", summary_order="origin"):
         dictionary = self._create_dictionary(document_set)
+        self.summary_order = summary_order
         # empty document
         if not dictionary:
             return ()

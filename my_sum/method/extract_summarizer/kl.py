@@ -36,7 +36,8 @@ class KLSummarizer(AbstractSummarizer):
     def stop_words(self, words):
         self._stop_words = frozenset(map(self.normalize_word, words))
 
-    def __call__(self, documentSet, words_limit):
+    def __call__(self, documentSet, words_limit, summary_order="origin"):
+        self.summary_order = summary_order
         ratings = self._get_ratings(documentSet)
         return self._get_best_sentences(documentSet.sentences, words_limit, ratings)
 

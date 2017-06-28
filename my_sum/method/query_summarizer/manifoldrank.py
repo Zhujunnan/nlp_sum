@@ -49,7 +49,8 @@ class ManifoldRankSummarizer(AbstractSummarizer):
     def stop_words(self, words):
         self._stop_words = frozenset(map(self.normalize_word, words))
 
-    def __call__(self, document_set, query, words_limit, method="mmr"):
+    def __call__(self, document_set, query, words_limit, method="mmr", summary_order="origin"):
+        self.summary_order = summary_order
         document_query = build_document_from_string(query, self.language)
         sentence_count = len(document_set.sentences)
         query_sent_count = len(document_query.sentences)

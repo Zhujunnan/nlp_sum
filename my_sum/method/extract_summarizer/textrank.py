@@ -36,7 +36,8 @@ class TextRankSummarizer(AbstractSummarizer):
     def stop_words(self, words):
         self._stop_words = frozenset(map(self.normalize_word, words))
 
-    def __call__(self, document_set, words_limit, method="default"):
+    def __call__(self, document_set, words_limit, method="default", summary_order="origin"):
+        self.summary_order = summary_order
         similarity_matrix = self._create_matrix(document_set)
         scores = self.power_method(similarity_matrix, self.epsilon)
         ratings = dict(zip(document_set.sentences, scores))
